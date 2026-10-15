@@ -6,9 +6,8 @@
             <img src="{{ asset('images/hero.jpg') }}" alt=""
                  class="absolute inset-0 -z-30 h-full w-full object-cover object-right">
         @endif
-
-        <div class="absolute inset-0 -z-20 bg-linear-to-r from-navy-950 via-navy-950/80 to-navy-950/20"></div>
-        <div class="absolute inset-0 -z-10 bg-blueprint opacity-60"></div>
+<div class="absolute inset-0 -z-20 bg-linear-to-r from-navy-950 from-30% via-navy-950/70 via-50% to-transparent"></div>
+<div class="absolute inset-0 -z-10 bg-blueprint opacity-20"></div>
         <div class="absolute -right-24 top-10 -z-10 h-96 w-96 rounded-full bg-brand-600/30 blur-3xl"></div>
 
         <div class="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
