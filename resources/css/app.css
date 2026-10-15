@@ -33,3 +33,28 @@
         @apply bg-white font-sans text-ink antialiased;
     }
 }
+
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm font-semibold uppercase tracking-wide transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400;
+    }
+
+    .btn-sm {
+        @apply px-3 py-2 text-xs;
+    }
+
+    .btn-primary {
+        @apply bg-brand-600 text-white hover:bg-brand-500;
+    }
+
+    .btn-outline {
+        @apply border border-white/40 text-white hover:bg-white/10;
+    }
+
+    .bg-blueprint {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+}
