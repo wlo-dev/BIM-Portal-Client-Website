@@ -35,4 +35,59 @@
             </a>
         </div>
     </section>
+        @php
+        $benefits = [
+            [
+                'title' => 'Flexible Capacity',
+                'text'  => 'Scale your team when you need it',
+                'paths' => ['M22 7l-8.5 8.5-5-5L2 17', 'M16 7h6v6'],
+            ],
+            [
+                'title' => 'Professional BIM Workflows',
+                'text'  => 'Structured, consistent and reliable',
+                'paths' => [
+                    'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z',
+                    'M3.3 7 12 12l8.7-5',
+                    'M12 22V12',
+                ],
+            ],
+            [
+                'title' => 'Remote Collaboration',
+                'text'  => 'Work together from anywhere',
+                'paths' => ['M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20', 'M2 12h20', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20'],
+            ],
+            [
+                'title' => 'Quality Assurance',
+                'text'  => 'Every deliverable reviewed',
+                'paths' => [
+                    'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z',
+                    'm9 12 2 2 4-4',
+                ],
+            ],
+            [
+                'title' => 'Cost Efficient',
+                'text'  => 'Get more done without overhead costs',
+                'paths' => ['M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', 'M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', 'M6 12h.01M18 12h.01'],
+            ],
+        ];
+    @endphp
+
+    <section class="border-b border-line bg-white">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-5 lg:gap-0 lg:px-8">
+            @foreach ($benefits as $item)
+                <div class="flex items-start gap-4 lg:border-l lg:border-line lg:px-6 lg:first:border-l-0 lg:first:pl-0">
+                    <svg class="h-9 w-9 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        @foreach ($item['paths'] as $d)
+                            <path d="{{ $d }}" />
+                        @endforeach
+                    </svg>
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-ink">{{ $item['title'] }}</h3>
+                        <p class="mt-1 text-sm text-muted">{{ $item['text'] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
 @endsection
