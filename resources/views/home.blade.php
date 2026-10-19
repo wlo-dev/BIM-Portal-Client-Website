@@ -6,8 +6,9 @@
             <img src="{{ asset('images/hero.jpg') }}" alt=""
                  class="absolute inset-0 -z-30 h-full w-full object-cover object-right">
         @endif
-<div class="absolute inset-0 -z-20 bg-linear-to-r from-navy-950 from-30% via-navy-950/70 via-50% to-transparent"></div>
-<div class="absolute inset-0 -z-10 bg-blueprint opacity-20"></div>
+
+        <div class="absolute inset-0 -z-20 bg-linear-to-r from-navy-950 from-30% via-navy-950/70 via-50% to-transparent"></div>
+        <div class="absolute inset-0 -z-10 bg-blueprint opacity-20"></div>
         <div class="absolute -right-24 top-10 -z-10 h-96 w-96 rounded-full bg-brand-600/30 blur-3xl"></div>
 
         <div class="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
@@ -35,7 +36,8 @@
             </a>
         </div>
     </section>
-        @php
+
+    @php
         $benefits = [
             [
                 'title' => 'Flexible Capacity',
@@ -90,34 +92,35 @@
             @endforeach
         </div>
     </section>
+
     @php
-    $service = [
-    [
-    'title' =>'BIM Modeling',
-    'text'=> 'Accurate, coordinated BIM models for all project types.',
-    'paths'=> [
-     'M21 8a2 2 0 0 0-1-1.731-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8V8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z',
-        'M12 22V12',
-    ],
-    ],
-    [
-    'title' => 'Revit Services',
-    'text' => 'Revit modelling, family, documentation and technical support.',
-    'paths' => [
-            'm12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z',
-            'm22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65',
-            'm22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65',
-        ],
-    ],
-    [
-     'title' => 'Architectural Documentation',
+        $services = [
+            [
+                'title' => 'BIM Modelling',
+                'text'  => 'Accurate, coordinated BIM models for all project types.',
+                'paths' => [
+                    'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z',
+                    'm3.3 7 8.7 5 8.7-5',
+                    'M12 22V12',
+                ],
+            ],
+            [
+                'title' => 'Revit Services',
+                'text'  => 'Revit modelling, families, documentation and technical support.',
+                'paths' => [
+                    'm12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z',
+                    'm22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65',
+                    'm22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65',
+                ],
+            ],
+            [
+                'title' => 'Architectural Documentation',
                 'text'  => 'High-quality drawings and documentation for construction and approvals.',
                 'paths' => [
                     'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z',
                     'M14 2v4a2 2 0 0 0 2 2h4',
                     'M10 9H8', 'M16 13H8', 'M16 17H8',
-
-        ],
+                ],
             ],
             [
                 'title' => 'CAD Services',
@@ -125,44 +128,3 @@
                 'paths' => [
                     'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20',
                     'M22 12h-4', 'M6 12H2', 'M12 6V2', 'M12 22v-4',
-                ],
-            ],
-        ];
-    @endphp
-
-    <section class="bg-surface py-16 sm:py-20">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="reveal flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-                <div class="max-w-2xl">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">What we do</p>
-                    <h2 class="mt-2 font-display text-4xl font-bold uppercase text-ink sm:text-5xl">Our Services</h2>
-                    <p class="mt-4 text-lg text-muted">End-to-end BIM and technical services to support your projects.</p>
-                </div>
-                <a href="#" class="btn btn-outline-dark self-start sm:self-auto">View all services</a>
-            </div>
-
-            <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach ($services as $service)
-                    <div class="reveal" style="--delay: {{ $loop->index * 100 }}ms">
-                        <a href="#" class="group flex h-full flex-col rounded-md border border-line bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-500 hover:shadow-xl">
-                            <span class="flex h-12 w-12 items-center justify-center rounded-md bg-brand-500/10 text-brand-600 transition group-hover:bg-brand-600 group-hover:text-white">
-                                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    @foreach ($service['paths'] as $d)
-                                        <path d="{{ $d }}" />
-                                    @endforeach
-                                </svg>
-                            </span>
-                            <h3 class="mt-5 font-display text-2xl font-bold uppercase text-ink">{{ $service['title'] }}</h3>
-                            <p class="mt-2 text-sm leading-relaxed text-muted">{{ $service['text'] }}</p>
-                            <span class="mt-auto inline-flex items-center gap-1 pt-6 text-xs font-bold uppercase tracking-wider text-brand-600">
-                                Learn more
-                                <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
-                            </span>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-@endsection
