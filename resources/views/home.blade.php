@@ -90,4 +90,30 @@
             @endforeach
         </div>
     </section>
+    @php
+    $service = [
+    [
+    'title' =>'BIM Modeling',
+    'text'=> 'Accurate, coordinated BIM models for all project types.',
+    'paths'=> [
+     'M21 8a2 2 0 0 0-1-1.731-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8V8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z',
+        'M12 22V12',
+    ],
+    ],
+    [
+    'title' => 'Revit Services',
+    'text' => 'Revit modelling, family, documentation and technical support.',
+    'paths' => [
+            'm12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z',
+            'm22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65',
+            'm22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65',
+        ],
+    ],
+    [
+     'title' => 'Architectural Documentation',
+                'text'  => 'High-quality drawings and documentation for construction and approvals.',
+                'paths' => [
+                    'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z',
+                    'M14 2v4a2 2 0 0 0 2 2h4',
+                    'M10 9H8', 'M16 13H8', 'M16 17H8',
 @endsection
