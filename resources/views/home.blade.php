@@ -39,38 +39,18 @@
 
     @php
         $benefits = [
-            [
-                'title' => 'Flexible Capacity',
-                'text'  => 'Scale your team when you need it',
-                'paths' => ['M22 7l-8.5 8.5-5-5L2 17', 'M16 7h6v6'],
-            ],
-            [
-                'title' => 'Professional BIM Workflows',
-                'text'  => 'Structured, consistent and reliable',
-                'paths' => [
-                    'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z',
-                    'M3.3 7 12 12l8.7-5',
-                    'M12 22V12',
-                ],
-            ],
-            [
-                'title' => 'Remote Collaboration',
-                'text'  => 'Work together from anywhere',
-                'paths' => ['M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20', 'M2 12h20', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20'],
-            ],
-            [
-                'title' => 'Quality Assurance',
-                'text'  => 'Every deliverable reviewed',
-                'paths' => [
-                    'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z',
-                    'm9 12 2 2 4-4',
-                ],
-            ],
-            [
-                'title' => 'Cost Efficient',
-                'text'  => 'Get more done without overhead costs',
-                'paths' => ['M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', 'M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', 'M6 12h.01M18 12h.01'],
-            ],
+            ['icon' => 'trending-up', 'title' => 'Flexible Capacity', 'text' => 'Scale your team when you need it'],
+            ['icon' => 'box', 'title' => 'Professional BIM Workflows', 'text' => 'Structured, consistent and reliable'],
+            ['icon' => 'globe', 'title' => 'Remote Collaboration', 'text' => 'Work together from anywhere'],
+            ['icon' => 'shield-check', 'title' => 'Quality Assurance', 'text' => 'Every deliverable reviewed'],
+            ['icon' => 'banknote', 'title' => 'Cost Efficient', 'text' => 'Get more done without overhead costs'],
+        ];
+
+        $services = [
+            ['icon' => 'box', 'title' => 'BIM Modelling', 'text' => 'Accurate, coordinated BIM models for all project types.'],
+            ['icon' => 'layers', 'title' => 'Revit Services', 'text' => 'Revit modelling, families, documentation and technical support.'],
+            ['icon' => 'file-text', 'title' => 'Architectural Documentation', 'text' => 'High-quality drawings and documentation for construction and approvals.'],
+            ['icon' => 'crosshair', 'title' => 'CAD Services', 'text' => '2D drafting, CAD conversion and technical drawing production.'],
         ];
     @endphp
 
@@ -78,12 +58,9 @@
         <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-5 lg:gap-0 lg:px-8">
             @foreach ($benefits as $item)
                 <div class="flex items-start gap-4 lg:border-l lg:border-line lg:px-6 lg:first:border-l-0 lg:first:pl-0">
-                    <svg class="h-9 w-9 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        @foreach ($item['paths'] as $d)
-                            <path d="{{ $d }}" />
-                        @endforeach
-                    </svg>
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-600/25">
+                        <x-icon :name="$item['icon']" class="h-6 w-6" />
+                    </span>
                     <div>
                         <h3 class="text-xs font-bold uppercase tracking-wider text-ink">{{ $item['title'] }}</h3>
                         <p class="mt-1 text-sm text-muted">{{ $item['text'] }}</p>
@@ -93,38 +70,34 @@
         </div>
     </section>
 
-    @php
-        $services = [
-            [
-                'title' => 'BIM Modelling',
-                'text'  => 'Accurate, coordinated BIM models for all project types.',
-                'paths' => [
-                    'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z',
-                    'm3.3 7 8.7 5 8.7-5',
-                    'M12 22V12',
-                ],
-            ],
-            [
-                'title' => 'Revit Services',
-                'text'  => 'Revit modelling, families, documentation and technical support.',
-                'paths' => [
-                    'm12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z',
-                    'm22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65',
-                    'm22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65',
-                ],
-            ],
-            [
-                'title' => 'Architectural Documentation',
-                'text'  => 'High-quality drawings and documentation for construction and approvals.',
-                'paths' => [
-                    'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z',
-                    'M14 2v4a2 2 0 0 0 2 2h4',
-                    'M10 9H8', 'M16 13H8', 'M16 17H8',
-                ],
-            ],
-            [
-                'title' => 'CAD Services',
-                'text'  => '2D drafting, CAD conversion and technical drawing production.',
-                'paths' => [
-                    'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20',
-                    'M22 12h-4', 'M6 12H2', 'M12 6V2', 'M12 22v-4',
+    <section class="bg-surface py-16 sm:py-20">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="reveal flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <div class="max-w-2xl">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-brand-600">What we do</p>
+                    <h2 class="mt-2 font-display text-4xl font-bold uppercase text-ink sm:text-5xl">Our Services</h2>
+                    <p class="mt-4 text-lg text-muted">End-to-end BIM and technical services to support your projects.</p>
+                </div>
+                <a href="#" class="btn btn-outline-dark self-start sm:self-auto">View all services</a>
+            </div>
+
+            <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ($services as $service)
+                    <div class="reveal" style="--delay: {{ $loop->index * 100 }}ms">
+                        <a href="#" class="group flex h-full flex-col rounded-xl border border-line bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-500 hover:shadow-xl">
+                            <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-600/30 transition duration-300 group-hover:rotate-3 group-hover:scale-110">
+                                <x-icon :name="$service['icon']" class="h-7 w-7" />
+                            </span>
+                            <h3 class="mt-5 font-display text-2xl font-bold uppercase text-ink">{{ $service['title'] }}</h3>
+                            <p class="mt-2 text-sm leading-relaxed text-muted">{{ $service['text'] }}</p>
+                            <span class="mt-auto inline-flex items-center gap-1 pt-6 text-xs font-bold uppercase tracking-wider text-brand-600">
+                                Learn more
+                                <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
+                            </span>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+@endsection
