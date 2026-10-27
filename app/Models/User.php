@@ -15,7 +15,7 @@ class user extends Authenticatable
     // Therefore  nobody can make themselves an admin by editing the request.
     protected $fillable = ['name', 'email', 'password'];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token'];  // Laravel will automatically scramble the password when it is saved to the database and will not return it in queries.
 
     protected function casts(): array
 {
