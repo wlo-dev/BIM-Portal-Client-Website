@@ -8,7 +8,7 @@ Route::view('/', 'home')->name('home');
 // only for guest user and people who are not logged in
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register',[AuthController::class, 'register']);->middleware('throttle:10,1');
+    Route::post('/register',[AuthController::class, 'register'])->middleware('throttle:10,1');
 
     Route::get('/login',[AuthController::class, 'showlogin'])->name('login');
     Route::post('/login',[AuthController::class, 'login'])->middleware('throttle:5,1');
@@ -20,4 +20,4 @@ Route::middleware('guest')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/account',[AccountController::class,'show'])->name('account');
         Route::put('/account',[AccountController::class,'update'])->name('account.update');
-    }):
+    });
