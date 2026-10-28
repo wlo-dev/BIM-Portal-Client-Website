@@ -24,6 +24,8 @@
             'About' => '#',
             'Contact' => '#',
         ];
+
+        $portalUrl = auth()->check() ? route('account') : route('login');
     @endphp
 
     <header class="sticky top-0 z-50 border-b border-white/10 bg-navy-950">
@@ -41,7 +43,7 @@
             </nav>
 
             <div class="hidden items-center gap-3 xl:flex">
-                <a href="#" class="btn btn-outline btn-sm">Client Portal</a>
+                <a href="{{ $portalUrl }}" class="btn btn-outline btn-sm">Client Portal</a>
                 <a href="#" class="btn btn-primary btn-sm">Request a Quote</a>
             </div>
 
@@ -63,7 +65,7 @@
                 @foreach ($navLinks as $label => $href)
                     <a href="{{ $href }}" class="rounded-sm px-3 py-3 text-sm font-semibold uppercase tracking-wider text-white/90 hover:bg-white/10">{{ $label }}</a>
                 @endforeach
-                <a href="#" class="btn btn-outline mt-3">Client Portal</a>
+                <a href="{{ $portalUrl }}" class="btn btn-outline mt-3">Client Portal</a>
             </nav>
         </div>
     </header>
