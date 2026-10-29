@@ -26,7 +26,7 @@
                                 @if ($user->isAdmin())
                     <a href="{{ route('admin.products.index') }}" class="btn btn-primary mt-6">Open admin</a>
                 @endif
-
+                <a href="{{ route('orders.index') }}" class="btn btn-outline-dark mt-6">My orders</a>
                 <form method="POST" action="{{ route('account.update') }}" class="mt-8 space-y-4 border-t border-line pt-8">
                     @csrf
                     @method('PUT')
