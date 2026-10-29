@@ -3,10 +3,15 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ShopController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
+
+// Public shop
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('shop.show');
 
 // Only for people who are NOT logged in
 Route::middleware('guest')->group(function () {
