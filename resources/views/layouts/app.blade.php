@@ -20,7 +20,7 @@
             'Portfolio' => '#',
             'How It Works' => '#',
             'Training' => '#',
-            'BIM Resources' => '#',
+            'BIM Resources' => route('shop.index'),
             'About' => '#',
             'Contact' => '#',
         ];
