@@ -19,9 +19,10 @@ public function index(Request $request)
     $products = Products::published()
     ->with('category')
     ->when($request->query('q'), fn ($query, $term) => $query->where('name', 'ilike', '%'. $term. '%'))
-    ->when
-    ->when
-    ->when
+    ->when($request->query('category'), fn ($query, $slug) => $query->whereHas('category', fn ($c) => $c->where('slug', $slug)))
+    ->when($sort ==='price_asc', fn ($query)=> $query->orderBy('price_cents'))
+    ->when($sort === 'price_desc' , fn ($query) => $query->orderByDesc('price_cents'))
+    ->when(! in_array($sort,['price_asc', 'price_desc']), fn($query) =>query->latest())
     ->paginate(9)
     ->withQueryString();
 
