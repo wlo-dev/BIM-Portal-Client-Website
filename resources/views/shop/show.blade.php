@@ -24,6 +24,12 @@
                     <p class="mt-4 text-3xl font-bold text-ink">{{ $product->priceFormatted() }}</p>
 
                     <div class="mt-6 whitespace-pre-line leading-relaxed text-muted">{{ $product->description }}</div>
+
+                    <form method="POST" action="{{ route('cart.add', $product) }}" class="mt-8">
+                        @csrf
+                        <button type="submit" class="btn btn-primary w-full sm:w-auto">Add to cart</button>
+                    </form>
+                    <p class="mt-3 text-xs text-muted">Instant digital download after purchase.</p>
                 </div>
             </div>
         </div>
