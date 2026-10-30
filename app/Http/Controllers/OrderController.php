@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\SandboxGateway;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class OrderController extends Controller
@@ -23,23 +26,79 @@ class OrderController extends Controller
         $this->authorizeOrder($request, $order);
 
         $order->load('items.product');
+        $payments = $order->payments()->latest()->get();
 
-        return view('orders.show', compact('order'));
+        return view('orders.show', compact('order', 'payments'));
     }
 
-    // DEMO PAYMENT: no card data is collected and no money moves.
-    // A real build would redirect to a payment provider and mark the order paid
-    // only after the provider confirms the payment.
-    public function pay(Request $request, Order $order): RedirectResponse
+    // The simulated gateway's payment page.
+    public function payment(Request $request, Order $order)
     {
         $this->authorizeOrder($request, $order);
 
-        if ($order->status === 'pending') {
-            $order->update(['status' => 'paid', 'paid_at' => now()]);
+        if ($order->status !== 'pending') {
+            return redirect()->route('orders.show', $order);
         }
 
+        return view('orders.payment', compact('order'));
+    }
+
+    // Processes the card through the simulated gateway.
+    public function pay(Request $request, Order $order, SandboxGateway $gateway): RedirectResponse
+    {
+        $this->authorizeOrder($request, $order);
+
+        if ($order->status !== 'pending') {
+            return redirect()->route('orders.show', $order);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'card_number' => ['bail', 'required', 'string', 'max:25', function ($attribute, $value, $fail) use ($gateway) {
+                if (! $gateway->isTestCard($value)) {
+                    $fail('This sandbox only accepts the test cards listed on this page.');
+                }
+            }],
+            'expiry' => ['bail', 'required', 'regex:/^(0[1-9]|1[0-2])\s*\/\s*\d{2}$/', function ($attribute, $value, $fail) {
+                [$month, $year] = array_map('trim', explode('/', $value));
+                $expires = Carbon::createFromDate(2000 + (int) $year, (int) $month, 1)->endOfMonth();
+
+                if ($expires->isPast()) {
+                    $fail('This card has expired.');
+                }
+            }],
+            'cvc' => ['required', 'digits_between:3,4'],
+        ]);
+
+        // We redirect with the errors only, never with the typed card details.
+        if ($validator->fails()) {
+            return redirect()->route('orders.payment', $order)->withErrors($validator);
+        }
+
+        $data = $validator->validated();
+
+        $result = $gateway->charge($order, $data['card_number']);
+
+        // Only safe details are saved: never the card number, expiry or CVC.
+        $order->payments()->create([
+            'provider' => 'sandbox',
+            'transaction_id' => $result['transaction_id'],
+            'amount_cents' => $result['amount_cents'],
+            'currency' => 'ZAR',
+            'status' => $result['status'],
+            'failure_reason' => $result['status'] === 'succeeded' ? null : $result['message'],
+            'card_brand' => $result['brand'],
+            'card_last4' => $result['last4'],
+        ]);
+
+        if ($result['status'] !== 'succeeded') {
+            return redirect()->route('orders.payment', $order)
+                ->withErrors(['payment' => $result['message'] . ' Your order is still pending, so you can try again.']);
+        }
+
+        $order->update(['status' => 'paid', 'paid_at' => now()]);
+
         return redirect()->route('orders.show', $order)
-            ->with('status', 'Demo payment recorded. Your downloads are ready.');
+            ->with('status', 'Payment approved. Transaction ' . $result['transaction_id'] . '. Your downloads are ready.');
     }
 
     public function download(Request $request, Order $order, Product $product)

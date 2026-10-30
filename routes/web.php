@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
+        Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('throttle:10,1');
     Route::get('/orders/{order}/download/{product}', [OrderController::class, 'download'])->name('orders.download');
 });
 
