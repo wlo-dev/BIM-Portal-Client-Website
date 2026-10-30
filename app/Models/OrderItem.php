@@ -4,18 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class OrderItem extends Model
+class Order extends Model
 {
-    protected $fillable = ['order_id', 'product_id', 'name', 'price_cents', 'quantity'];
+    protected $fillable = ['user_id', 'reference', 'status', 'total_cents', 'paid_at'];
 
-    public function order(): BelongsTo
+    protected function casts(): array
     {
-        return $this->belongsTo(Order::class);
+        return ['paid_at' => 'datetime'];
     }
 
-    public function product(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function totalFormatted(): string
+    {
+        return 'R ' . number_format($this->total_cents / 100, 2);
     }
 }
