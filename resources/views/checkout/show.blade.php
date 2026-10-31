@@ -20,10 +20,6 @@
                 </div>
             </div>
 
-            <p class="mt-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                <strong>Demo store:</strong> the next step uses a simulated payment. No card details are collected and no money is taken.
-            </p>
-
             <form method="POST" action="{{ route('checkout.store') }}" class="mt-6 flex flex-wrap gap-3">
                 @csrf
                 <button type="submit" class="btn btn-primary">Place order</button>

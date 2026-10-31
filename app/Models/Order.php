@@ -25,6 +25,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function totalFormatted(): string
     {
         return 'R ' . number_format($this->total_cents / 100, 2);
