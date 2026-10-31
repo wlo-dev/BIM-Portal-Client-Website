@@ -13,6 +13,12 @@
                 </div>
             @endif
 
+            @if ($errors->has('payment'))
+                <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    {{ $errors->first('payment') }}
+                </div>
+            @endif
+
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <h1 class="font-display text-4xl font-bold uppercase text-ink">Order {{ $order->reference }}</h1>
                 @if ($order->status === 'paid')
@@ -48,10 +54,24 @@
             @if ($order->status === 'pending')
                 <div class="mt-6 rounded-xl border border-line bg-white p-6 shadow-sm">
                     <h2 class="font-display text-2xl font-bold uppercase text-ink">Payment</h2>
-                    <p class="mt-2 text-sm text-muted">
-                        Pay securely through SandboxPay, our simulated test-mode payment provider. No real money is taken.
-                    </p>
-                    <a href="{{ route('orders.payment', $order) }}" class="btn btn-primary mt-4">Pay {{ $order->totalFormatted() }}</a>
+
+                    @if ($gatewayEnabled)
+                        <p class="mt-2 text-sm text-muted">
+                            You will be taken to Paystack's secure checkout in test mode. No real money is taken.
+                            Use Paystack's test card
+                            <span class="font-mono font-semibold text-ink">4084 0840 8408 4081</span>
+                            with any future expiry and CVV <span class="font-mono font-semibold text-ink">408</span>.
+                        </p>
+                        <form method="POST" action="{{ route('orders.gateway.start', $order) }}" class="mt-4">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Pay {{ $order->totalFormatted() }} with Paystack</button>
+                        </form>
+                    @else
+                        <p class="mt-2 text-sm text-muted">
+                            Pay securely through SandboxPay, our simulated test-mode payment provider. No real money is taken.
+                        </p>
+                        <a href="{{ route('orders.payment', $order) }}" class="btn btn-primary mt-4">Pay {{ $order->totalFormatted() }}</a>
+                    @endif
                 </div>
             @endif
 
@@ -64,7 +84,11 @@
                                 <div>
                                     <p class="font-mono font-semibold text-ink">{{ $payment->transaction_id }}</p>
                                     <p class="text-muted">
-                                        {{ $payment->card_brand }} ending {{ $payment->card_last4 }}
+                                        @if ($payment->card_last4)
+                                            {{ $payment->card_brand }} ending {{ $payment->card_last4 }}
+                                        @else
+                                            {{ ucfirst($payment->provider) }}
+                                        @endif
                                         · {{ $payment->created_at->format('d M Y, H:i') }}
                                     </p>
                                     @if ($payment->failure_reason)

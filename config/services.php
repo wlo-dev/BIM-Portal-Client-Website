@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+        'paystack' => [
+        'secret' => env('PAYSTACK_SECRET'),
+        'currency' => env('PAYSTACK_CURRENCY', 'ZAR'),
+    ],
 ];

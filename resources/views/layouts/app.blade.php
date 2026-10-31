@@ -15,17 +15,18 @@
     @php
         $navLinks = [
             'Home' => url('/'),
-            'Services' => '#',
-            'Industries' => '#',
-            'Portfolio' => '#',
-            'How It Works' => '#',
-            'Training' => '#',
+            'Services' => route('pages.services'),
+            'Industries' => route('pages.industries'),
+            'Portfolio' => route('pages.portfolio'),
+            'How It Works' => route('pages.how-it-works'),
+            'Training' => route('pages.training'),
             'BIM Resources' => route('shop.index'),
-            'About' => '#',
-            'Contact' => '#',
+            'About' => route('pages.about'),
+            'Contact' => route('contact.create'),
         ];
 
         $portalUrl = auth()->check() ? route('account') : route('login');
+        $quoteUrl = route('quote.create');
         $cartCount = count(session('cart', []));
     @endphp
 
@@ -54,7 +55,7 @@
                     @endif
                 </a>
                 <a href="{{ $portalUrl }}" class="btn btn-outline btn-sm">Client Portal</a>
-                <a href="#" class="btn btn-primary btn-sm">Request a Quote</a>
+                <a href="{{ $quoteUrl }}" class="btn btn-primary btn-sm">Request a Quote</a>
             </div>
 
             <div class="flex items-center gap-1 xl:hidden">
@@ -67,7 +68,7 @@
                         <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-500 px-1 text-[0.65rem] font-bold text-white">{{ $cartCount }}</span>
                     @endif
                 </a>
-                <a href="#" class="btn btn-primary btn-sm hidden sm:inline-flex">Request a Quote</a>
+                <a href="{{ $quoteUrl }}" class="btn btn-primary btn-sm hidden sm:inline-flex">Request a Quote</a>
                 <button id="menu-toggle" type="button"
                         class="rounded-sm p-2 text-white hover:bg-white/10"
                         aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle menu">
@@ -85,7 +86,7 @@
                     <a href="{{ $href }}" class="rounded-sm px-3 py-3 text-sm font-semibold uppercase tracking-wider text-white/90 hover:bg-white/10">{{ $label }}</a>
                 @endforeach
                 <a href="{{ $portalUrl }}" class="btn btn-outline mt-3">Client Portal</a>
-                <a href="#" class="btn btn-primary mt-2">Request a Quote</a>
+                <a href="{{ $quoteUrl }}" class="btn btn-primary mt-2">Request a Quote</a>
             </nav>
         </div>
     </header>
@@ -93,5 +94,7 @@
     <main>
         @yield('content')
     </main>
+
+    <x-footer />
 </body>
 </html>

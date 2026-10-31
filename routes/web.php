@@ -5,12 +5,28 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ShopController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
+
+// Content pages (text lives in config/pages.php)
+foreach (['services', 'industries', 'portfolio', 'how-it-works', 'training', 'about'] as $slug) {
+    Route::get('/' . $slug, [PageController::class, 'show'])
+        ->defaults('slug', $slug)
+        ->name('pages.' . $slug);
+}
+
+// Contact and quote requests
+Route::get('/contact', [EnquiryController::class, 'contact'])->name('contact.create');
+Route::post('/contact', [EnquiryController::class, 'storeContact'])->name('contact.store')->middleware('throttle:5,1');
+Route::get('/request-a-quote', [EnquiryController::class, 'quote'])->name('quote.create');
+Route::post('/request-a-quote', [EnquiryController::class, 'storeQuote'])->name('quote.store')->middleware('throttle:5,1');
+Route::get('/request-a-quote/received', [EnquiryController::class, 'thanks'])->name('quote.thanks');
 
 // Public shop
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
@@ -41,8 +57,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-        Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('throttle:10,1');
     Route::get('/orders/{order}/download/{product}', [OrderController::class, 'download'])->name('orders.download');
+
+    // SandboxPay (fallback gateway)
+    Route::get('/orders/{order}/pay', [OrderController::class, 'payment'])->name('orders.payment');
+    Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('throttle:10,1');
+
+    // Paystack (test mode)
+    Route::post('/orders/{order}/gateway', [OrderController::class, 'gatewayStart'])->name('orders.gateway.start')->middleware('throttle:10,1');
+    Route::get('/orders/{order}/gateway/return', [OrderController::class, 'gatewayReturn'])->name('orders.gateway.return');
 });
 
 // Only for logged-in ADMINS

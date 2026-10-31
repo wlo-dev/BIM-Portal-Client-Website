@@ -27,7 +27,7 @@
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#" class="btn btn-primary">Request a Quote</a>
+                <a href="{{ route('quote.create') }}>Request a Quote</a>
                 <a href="#" class="btn btn-outline">Explore Our Services</a>
             </div>
 

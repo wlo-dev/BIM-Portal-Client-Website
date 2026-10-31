@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\PaystackCheckout;
 use App\Services\SandboxGateway;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,17 +22,107 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
-    public function show(Request $request, Order $order)
+    public function show(Request $request, Order $order, PaystackCheckout $gateway)
     {
         $this->authorizeOrder($request, $order);
 
         $order->load('items.product');
         $payments = $order->payments()->latest()->get();
+        $gatewayEnabled = $gateway->enabled();
 
-        return view('orders.show', compact('order', 'payments'));
+        return view('orders.show', compact('order', 'payments', 'gatewayEnabled'));
     }
 
-    // The simulated gateway's payment page.
+    // ---------- Paystack (test mode) ----------
+
+    public function gatewayStart(Request $request, Order $order, PaystackCheckout $gateway): RedirectResponse
+    {
+        $this->authorizeOrder($request, $order);
+
+        if ($order->status !== 'pending' || ! $gateway->enabled()) {
+            return redirect()->route('orders.show', $order);
+        }
+
+        // Each attempt needs its own reference.
+        $reference = $order->reference . '-' . Str::lower(Str::random(6));
+
+        try {
+            $data = $gateway->initialize(
+                $order,
+                $request->user()->email,
+                $reference,
+                route('orders.gateway.return', $order)
+            );
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'We could not start the payment. Please try again.']);
+        }
+
+        return redirect()->away($data['authorization_url']);
+    }
+
+    public function gatewayReturn(Request $request, Order $order, PaystackCheckout $gateway): RedirectResponse
+    {
+        $this->authorizeOrder($request, $order);
+
+        if ($order->status === 'paid') {
+            return redirect()->route('orders.show', $order);
+        }
+
+        $reference = (string) ($request->query('reference') ?? $request->query('trxref'));
+
+        // The reference must belong to this order.
+        if (! str_starts_with($reference, $order->reference . '-')) {
+            return redirect()->route('orders.show', $order);
+        }
+
+        try {
+            $data = $gateway->verify($reference);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'We could not confirm the payment yet. Please refresh in a moment.']);
+        }
+
+        // Trust Paystack's answer, not the browser: check status, reference, amount and currency.
+        $valid = ($data['status'] ?? null) === 'success'
+            && ($data['reference'] ?? null) === $reference
+            && (int) ($data['amount'] ?? 0) === $order->total_cents
+            && strtoupper($data['currency'] ?? '') === strtoupper(config('services.paystack.currency'));
+
+        if (! $valid) {
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'The payment was not completed, so your order is still pending.']);
+        }
+
+        $authorization = $data['authorization'] ?? [];
+        $brand = trim((string) ($authorization['brand'] ?? $authorization['card_type'] ?? ''));
+        $last4 = $authorization['last4'] ?? null;
+
+        // Only safe details are saved: the provider's reference, brand and last four digits.
+        $order->payments()->firstOrCreate(
+            ['transaction_id' => substr($reference, 0, 40)],
+            [
+                'provider' => 'paystack',
+                'amount_cents' => $order->total_cents,
+                'currency' => strtoupper(config('services.paystack.currency')),
+                'status' => 'succeeded',
+                'card_brand' => $brand !== '' ? ucfirst($brand) : null,
+                'card_last4' => $last4 ? substr($last4, -4) : null,
+            ]
+        );
+
+        $order->update(['status' => 'paid', 'paid_at' => now()]);
+
+        return redirect()->route('orders.show', $order)
+            ->with('status', 'Payment confirmed by Paystack. Reference ' . $reference . '. Your downloads are ready.');
+    }
+
+    // ---------- SandboxPay (fallback when no Paystack key is set) ----------
+
     public function payment(Request $request, Order $order)
     {
         $this->authorizeOrder($request, $order);
@@ -43,7 +134,6 @@ class OrderController extends Controller
         return view('orders.payment', compact('order'));
     }
 
-    // Processes the card through the simulated gateway.
     public function pay(Request $request, Order $order, SandboxGateway $gateway): RedirectResponse
     {
         $this->authorizeOrder($request, $order);
@@ -100,6 +190,8 @@ class OrderController extends Controller
         return redirect()->route('orders.show', $order)
             ->with('status', 'Payment approved. Transaction ' . $result['transaction_id'] . '. Your downloads are ready.');
     }
+
+    // ---------- Downloads ----------
 
     public function download(Request $request, Order $order, Product $product)
     {
