@@ -88,8 +88,13 @@
 
         <div id="mobile-menu" class="hidden max-h-[calc(100vh-4.5rem)] overflow-y-auto border-t border-white/10 xl:hidden">
             <nav class="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-                @foreach ($navLinks as $label => $href)
-                    <a href="{{ $href }}" class="rounded-sm px-3 py-3 text-sm font-semibold uppercase tracking-wider text-white/90 hover:bg-white/10">{{ $label }}</a>
+                               @foreach ($navLinks as $label => $href)
+                    @php
+                        $active = $label === 'Home'
+                            ? request()->routeIs('home')
+                            : (request()->url() === $href || str_starts_with(request()->url(), $href . '/'));
+                    @endphp
+                    <a href="{{ $href }}" class="rounded-sm px-3 py-3 text-sm font-semibold uppercase tracking-wider hover:bg-white/10 {{ $active ? 'bg-white/10 text-white' : 'text-white/90' }}">{{ $label }}</a>
                 @endforeach
                 <a href="{{ $portalUrl }}" class="btn btn-outline mt-3">Client Portal</a>
                 <a href="{{ $quoteUrl }}" class="btn btn-primary mt-2">Request a Quote</a>
