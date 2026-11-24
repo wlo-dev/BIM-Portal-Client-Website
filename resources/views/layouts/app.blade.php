@@ -38,9 +38,15 @@
             </a>
 
             <nav class="hidden items-center gap-6 xl:flex" aria-label="Main">
-                @foreach ($navLinks as $label => $href)
+                              @foreach ($navLinks as $label => $href)
+                    @php
+                        $active = $label === 'Home'
+                            ? request()->routeIs('home')
+                            : (request()->url() === $href || str_starts_with(request()->url(), $href . '/'));
+                    @endphp
                     <a href="{{ $href }}"
-                       class="border-b-2 py-1 text-xs font-semibold uppercase tracking-wider text-white/90 transition hover:text-white {{ $label === 'Home' ? 'border-brand-400' : 'border-transparent' }}">{{ $label }}</a>
+                       @if ($active) aria-current="page" @endif
+                       class="border-b-2 py-1 text-xs font-semibold uppercase tracking-wider transition {{ $active ? 'border-brand-400 text-white' : 'border-transparent text-white/90 hover:border-white/40 hover:text-white' }}">{{ $label }}</a>
                 @endforeach
             </nav>
 
